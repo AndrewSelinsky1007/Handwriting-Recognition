@@ -11,6 +11,8 @@ cap = cv2.VideoCapture(0)
 sentence = ""
 current_buffer = ""
 buffer_count = 0
+
+# Frames to add a character to the sentence string
 CONFIRMATION_THRESHOLD = 20
 
 while True:
@@ -35,7 +37,7 @@ while True:
     if confidence > 0.7:
         detected_letter = alphabet[letter_idx]
         
-        #Only count if it's the SAME letter as the last frame
+        #See if it is the same letter as the previous frame
         if detected_letter == current_buffer:
             buffer_count += 1
         else:
@@ -47,7 +49,7 @@ while True:
             sentence += detected_letter
             buffer_count = 0 # Reset
     else:
-        buffer_count = 0 # Reset if AI sees nothing
+        buffer_count = 0 # Reset
 
     cv2.putText(frame, "Sentence: " + sentence, (50, height - 50), 
                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
@@ -58,14 +60,14 @@ while True:
     cv2.imshow("Camera", frame)
     cv2.imshow("AI View", thresh)
 
-    # --- CONTROLS ---
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
         break
-    elif key == ord('c'): # Clear sentence
+    elif key == ord('c'):
         sentence = ""
-    elif key == ord(' '): # Add a space
+    elif key == ord(' '):
         sentence += " "
 
 cap.release()
+
 cv2.destroyAllWindows()
